@@ -15,3 +15,18 @@ class Customer(BaseModel):
     class Config:
         allow_mutation = False
         orm_mode = True
+
+
+class CreateCustomerDTO(BaseModel):
+    name: str
+    email: EmailStr
+    password: str = Password
+
+
+class CustomerResponse(BaseModel):
+    id: UUID = ID
+    name: str
+    email: EmailStr
+
+    class Config:
+        allow_mutation = False
