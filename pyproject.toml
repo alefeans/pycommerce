@@ -58,3 +58,9 @@ exclude = '''
   | dist
 )/
 '''
+
+[[tool.mypy.overrides]]
+module = [
+    "toolz",
+]
+ignore_missing_imports = true
