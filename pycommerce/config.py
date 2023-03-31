@@ -4,9 +4,7 @@ from pydantic import BaseSettings, validator
 
 class Settings(BaseSettings):
     ENV: Literal["test", "dev", "prod"] = "dev"
-    LOG_LEVEL: Literal[
-        "critical", "error", "warning", "info", "debug", "trace"
-    ] = "info"
+    LOG_LEVEL: Literal["critical", "error", "warning", "info", "debug", "trace"] = "info"
     DB_URL: str = ""
     APP_DEBUG: bool = True
     APP_DESCRIPTION: str = "Ecommerce Application Example Implemented in Python"
