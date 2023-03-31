@@ -26,23 +26,23 @@ def invalid_data() -> TestData:
 
 
 def test_if_accepts_valid_data(valid_data):
-    assert Customer(**valid_data)
+    assert Customer.parse_obj(valid_data)
 
 
 def test_if_automatically_generates_uuid(valid_data):
-    assert Customer(**valid_data).id != Customer(**valid_data).id
+    assert Customer.parse_obj(valid_data).id != Customer.parse_obj(valid_data).id
 
 
 def test_if_raises_when_password_has_less_than_eight_characters(valid_data):
     invalid = valid_data | {"password": "small"}
     with pytest.raises(ValidationError, match="at least 8 characters"):
-        assert Customer(**invalid)
+        assert Customer.parse_obj(invalid)
 
 
 def test_if_raises_when_password_has_more_than_hundred_characters(valid_data):
     invalid = valid_data | {"password": "a" * 101}
     with pytest.raises(ValidationError, match="has at most 100 characters"):
-        assert Customer(**invalid)
+        assert Customer.parse_obj(invalid)
 
 
 def test_if_raises_with_invalid_data(valid_data, invalid_data):
@@ -53,10 +53,10 @@ def test_if_raises_with_invalid_data(valid_data, invalid_data):
         missing = valid_data.copy()
         with pytest.raises(ValidationError, match=str(key)):
             missing.pop(key)
-            Customer(**missing)
+            Customer.parse_obj(missing)
 
 
 def test_if_raises_when_mutating_data(valid_data):
-    customer = Customer(**valid_data)
+    customer = Customer.parse_obj(valid_data)
     with pytest.raises(TypeError, match='"Customer" is immutable'):
         customer.name = "changed"
