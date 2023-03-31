@@ -13,10 +13,6 @@ def create_instance(settings: Settings) -> FastAPI:
     )
 
 
-def init_database(app: FastAPI) -> FastAPI:
-    return app
-
-
 def register_events(app: FastAPI) -> FastAPI:
     return app
 
@@ -35,7 +31,6 @@ def create_app(settings: Settings) -> FastAPI:
     app: FastAPI = pipe(
         settings,
         create_instance,
-        init_database,
         register_events,
         register_middlewares,
         register_routers,
