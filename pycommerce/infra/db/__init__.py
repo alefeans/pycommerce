@@ -1,7 +1,7 @@
 from typing import AsyncGenerator
-from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlmodel.ext.asyncio.session import AsyncSession
 from pycommerce.config import get_settings
 
 DBSession = AsyncSession
