@@ -7,8 +7,8 @@ router = APIRouter()
 
 class HealthCheck(BaseModel):
     title: str = Field(..., description="API title")
-    description: str = Field(..., description="Brief description of the API")
-    version: str = Field(..., description="API semver version number")
+    description: str = Field(..., description="API Description")
+    version: str = Field(..., description="API version number")
     status: str = Field(..., description="API current status")
 
 
