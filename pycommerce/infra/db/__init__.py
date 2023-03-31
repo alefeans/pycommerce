@@ -6,9 +6,9 @@ from pycommerce.config import get_settings
 
 DBSession = AsyncSession
 engine = create_async_engine(get_settings().DB_URL, future=True)
+async_session = sessionmaker(engine, class_=DBSession, expire_on_commit=False)
 
 
 async def get_session() -> AsyncGenerator[DBSession, None]:
-    async_session = sessionmaker(engine, class_=DBSession, expire_on_commit=False)
     async with async_session() as session:
         yield session
