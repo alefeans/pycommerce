@@ -10,11 +10,6 @@ class CustomerRepo(Protocol):
 
     async def fetch_by_email(self, email: EmailStr) -> Optional[Customer]:
         ...
-    
+
     async def fetch_by_id(self, id: UUID) -> Optional[Customer]:
-        ...
-
-
-class HashingService(Protocol):
-    async def hash(self, string: str) -> str:
         ...
