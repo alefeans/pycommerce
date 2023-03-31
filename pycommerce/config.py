@@ -3,7 +3,7 @@ from pydantic import BaseSettings, validator
 
 
 class Settings(BaseSettings):
-    ENV: str = "dev"
+    ENV: Literal["test", "dev", "prod"] = "dev"
     LOG_LEVEL: Literal[
         "critical", "error", "warning", "info", "debug", "trace"
     ] = "info"
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     @validator("DB_URL")
     def check_db_url(cls, db_url):
         if not db_url:
-            raise ValueError("DB Url cannot be empty")
+            raise ValueError("Database URL cannot be empty")
         return db_url
 
 
