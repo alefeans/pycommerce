@@ -1,12 +1,12 @@
 # Pycommerce
 
+## Overview (Work in Progress)
+
 <p align="left">
   <a href="https://skillicons.dev">
     <img src="https://skills.thijs.gg/icons?i=py,fastapi,postgres,docker&theme=dark" />
   </a>
 </p>
-
-## Overview (Work in Progress)
 
 `Pycommerce` is an example application built with modern Python using DDD, TDD, Hexagonal Architecture, and the following technologies:
 
