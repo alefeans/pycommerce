@@ -1,11 +1,13 @@
 from uuid import UUID
+from typing import Optional
 from pycommerce.core.entities.customer import (
     Customer,
     CreateCustomerDTO,
     CustomerResponse,
 )
-from pycommerce.core.protocols.customer import CustomerRepo, HashingService
-from pycommerce.core.services.exceptions import CustomerAlreadyExists, CustomerNotFound
+from pycommerce.core.protocols.customer import CustomerRepo
+from pycommerce.core.protocols.common import HashingService
+from pycommerce.core.services.exceptions import CustomerAlreadyExists
 
 
 async def create(
@@ -14,14 +16,12 @@ async def create(
     if await repo.fetch_by_email(dto.email):
         raise CustomerAlreadyExists(f"Customer {dto.email} already exists")
 
-    dto.password = await hasher.hash(dto.password)
-    customer = Customer(**dto.dict())
+    dto.password = hasher.hash(dto.password)
+    customer = Customer.parse_obj(dto)
     result = await repo.persist(customer)
-    return CustomerResponse(**result.dict())
+    return CustomerResponse.parse_obj(result)
 
 
-async def fetch_by_id(repo: CustomerRepo, _id: UUID) -> CustomerResponse:
+async def fetch_by_id(repo: CustomerRepo, _id: UUID) -> Optional[CustomerResponse]:
     customer = await repo.fetch_by_id(_id)
-    if not customer:
-        raise CustomerNotFound(f"Customer {_id} not found")
-    return CustomerResponse(**customer.dict())
+    return CustomerResponse.parse_obj(customer) if customer else None
