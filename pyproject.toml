@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pycommerce"
 version = "0.1.0"
-description = "Ecommerce example application"
+description = "Ecommerce Example Application"
 authors = ["alefeans <alefeans2@hotmail.com>"]
 readme = "README.md"
 

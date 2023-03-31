@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: Literal["critical", "error", "warning", "info", "debug", "trace"] = "info"
     DB_URL: str = ""
     APP_DEBUG: bool = True
-    APP_DESCRIPTION: str = "Ecommerce Example Application Implemented in Python"
+    APP_DESCRIPTION: str = "Ecommerce Example Application"
     APP_TITLE: str = "PyCommerce"
     APP_VERSION: str = "0.0.1"
     SERVER_HOST: str = "0.0.0.0"
