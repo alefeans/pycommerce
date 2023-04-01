@@ -44,7 +44,7 @@ async def test_if_creates_customer_successfully(
     assert create_customer_dto.email == result.email
 
 
-async def test_if_raises_when_customer_already_exists(
+async def test_if_raises_when_creating_duplicated_customer(
     customer_repo, hashing_service, create_customer_dto, customer_ok
 ):
     customer_repo.fetch_by_email.return_value = customer_ok
@@ -62,7 +62,7 @@ async def test_if_fetches_customer_by_id(customer_repo, customer_ok):
     assert customer_ok.id == result.id  # type: ignore
 
 
-async def test_if_returns_none_when_customer_not_found(customer_repo, customer_ok):
+async def test_if_returns_none_when_fetching_nonexisting_customer(customer_repo, customer_ok):
     customer_repo.fetch_by_id.return_value = None
     result = await customer.fetch_by_id(customer_repo, customer_ok.id)
     customer_repo.fetch_by_id.assert_called_once()
