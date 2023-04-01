@@ -45,7 +45,7 @@ poetry run app
 
 # or
 
-python pycommerce
+python -m pycommerce
 ```
 
 ## Docker
