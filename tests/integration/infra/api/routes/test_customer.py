@@ -15,7 +15,9 @@ async def test_fetch_customer_not_found(async_test_client):
     uid = uuid4()
     async with async_test_client as client:
         response = await client.get(f"/customers/{uid}")
-        assert response.status_code == 404
+        data, status_code = response.json(), response.status_code
+        assert status_code == 404
+        assert data == {"detail": "Customer not found"}
 
 
 async def test_fetch_customer_invalid_id(async_test_client):
