@@ -28,7 +28,7 @@
 
 ## Usage
 
-First, install the dependencies inside your virtual environment, then:
+First, activate your virtual environment and run:
 
 ```sh
 poetry install
