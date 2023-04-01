@@ -41,9 +41,9 @@ async def test_create_customer_persistence(async_test_client, create_customer_pa
         assert status_code == 201
 
         response = await client.get(f'/customers/{created["id"]}')
-        data, status_code = response.json(), response.status_code
+        fetched, status_code = response.json(), response.status_code
         assert status_code == 200
-        assert created["email"] == data["email"]
+        assert created["email"] == fetched["email"]
 
 
 async def test_create_customer_conflict(async_test_client, create_customer_payload):
