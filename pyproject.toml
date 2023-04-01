@@ -33,34 +33,16 @@ pytest-cov = "^4.0.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-
 [tool.pytest.ini_options]
 testpaths = "tests"
 asyncio_mode = "auto"
 
-
 [tool.poetry.scripts]
 app = "pycommerce:start_server"
 
+[[tool.mypy.overrides]]
+module = ["toolz"]
+ignore_missing_imports = true
+
 [tool.black]
 line-length = 95
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.history
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
-
-[[tool.mypy.overrides]]
-module = [
-    "toolz",
-]
-ignore_missing_imports = true
