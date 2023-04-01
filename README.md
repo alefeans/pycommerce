@@ -8,7 +8,7 @@
   </a>
 </p>
 
-`Pycommerce` is an example application built with modern Python using DDD, TDD, Hexagonal Architecture, and the following technologies:
+`Pycommerce` is an example application built with modern Python using DDD, TDD, a "variant" of Clean Architecture, and the following technologies:
 
 
 - Language: [Python 3.11](https://www.python.org/)
