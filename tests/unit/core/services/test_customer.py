@@ -53,6 +53,8 @@ async def test_if_raises_when_creating_duplicated_customer(
         CustomerAlreadyExists, match=f"Customer {customer_ok.email} already exists"
     ):
         await customer.create(customer_repo, hashing_service, create_customer_dto)
+    customer_repo.fetch_by_email.assert_called_once()
+    customer_repo.persist.assert_not_called()
 
 
 async def test_if_fetches_customer_by_id(customer_repo, customer_ok):
@@ -67,3 +69,17 @@ async def test_if_returns_none_when_fetching_nonexisting_customer(customer_repo,
     result = await customer.fetch_by_id(customer_repo, customer_ok.id)
     customer_repo.fetch_by_id.assert_called_once()
     assert result is None
+
+
+async def test_if_returns_false_when_deleting_nonexisting_customer(customer_repo, customer_ok):
+    customer_repo.delete.return_value = False
+    result = await customer.delete(customer_repo, customer_ok.id)
+    customer_repo.delete.assert_called_once()
+    assert result is False
+
+
+async def test_if_returns_true_when_deleting_existing_customer(customer_repo, customer_ok):
+    customer_repo.delete.return_value = True
+    result = await customer.delete(customer_repo, customer_ok.id)
+    customer_repo.delete.assert_called_once()
+    assert result is True

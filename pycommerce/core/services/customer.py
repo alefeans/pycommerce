@@ -25,3 +25,7 @@ async def create(
 async def fetch_by_id(repo: CustomerRepo, _id: UUID) -> Optional[CustomerResponse]:
     customer = await repo.fetch_by_id(_id)
     return CustomerResponse.parse_obj(customer) if customer else None
+
+
+async def delete(repo: CustomerRepo, _id: UUID) -> bool:
+    return await repo.delete(_id)

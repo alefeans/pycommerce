@@ -13,3 +13,6 @@ class CustomerRepo(Protocol):
 
     async def fetch_by_id(self, id: UUID) -> Optional[Customer]:
         ...
+
+    async def delete(self, id: UUID) -> bool:
+        ...
