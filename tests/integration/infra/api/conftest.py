@@ -30,7 +30,8 @@ async def clear_database():
 
 
 @pytest.fixture()
-async def async_test_client(app, settings):
+async def client(app, settings):
     base_url = f"http://{settings.SERVER_HOST}:{settings.SERVER_PORT}"
     async with clear_database():
-        yield AsyncClient(app=app, base_url=base_url)
+        async with AsyncClient(app=app, base_url=base_url) as c:
+            yield c
