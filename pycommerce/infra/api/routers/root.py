@@ -1,4 +1,4 @@
-from fastapi.routing import APIRouter
+from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from pycommerce.config import get_settings
 

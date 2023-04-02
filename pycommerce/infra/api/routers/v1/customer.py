@@ -1,16 +1,14 @@
 from uuid import UUID
 from typing import Annotated
 from functools import partial
-from fastapi import Depends, HTTPException
-from fastapi.routing import APIRouter
+from fastapi import Depends, HTTPException, APIRouter
 from pycommerce.core.services import customer
 from pycommerce.core.services.exceptions import CustomerAlreadyExists
 from pycommerce.core.entities.customer import CustomerResponse, CreateCustomerDTO
 from pycommerce.infra.db.repositories.customer import CustomerRepo
 from pycommerce.infra.api.dependencies import get_repo, HashingService
 
-router = APIRouter(prefix="/customers", tags=["Customers"])
-
+router = APIRouter()
 Repo = Annotated[CustomerRepo, Depends(partial(get_repo, CustomerRepo))]
 
 
@@ -46,3 +44,17 @@ async def get(customer_id: UUID, repo: Repo) -> CustomerResponse:
     if not response:
         raise HTTPException(status_code=404, detail="Customer not found")
     return response
+
+
+@router.delete(
+    "/{customer_id}",
+    status_code=204,
+    summary="Delete Customer",
+    responses={
+        204: {"description": "Customer deleted successfully"},
+        404: {"description": "Customer not found"},
+    },
+)
+async def delete(customer_id: UUID, repo: Repo) -> None:
+    if not await customer.delete(repo, customer_id):
+        raise HTTPException(status_code=404, detail="Customer not found")

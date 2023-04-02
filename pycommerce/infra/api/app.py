@@ -1,7 +1,8 @@
 from toolz import pipe
+from fastapi import FastAPI
 from pycommerce.config import Settings
-from fastapi.applications import FastAPI
-from pycommerce.infra.api.routers import root, customer
+from pycommerce.infra.api.routers import v1
+from pycommerce.infra.api.routers import root
 
 
 def create_instance(settings: Settings) -> FastAPI:
@@ -23,7 +24,7 @@ def register_middlewares(app: FastAPI) -> FastAPI:
 
 def register_routers(app: FastAPI) -> FastAPI:
     app.include_router(root.router)
-    app.include_router(customer.router)
+    app.include_router(v1.router, prefix="/api/v1")
     return app
 
 
