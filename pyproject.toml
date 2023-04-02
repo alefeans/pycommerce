@@ -13,7 +13,6 @@ alembic = "^1.10.2"
 pydantic = {extras = ["dotenv"], version = "^1.10.7"}
 email-validator = "^1.3.1"
 sqlmodel = "^0.0.8"
-toolz = "^0.12.0"
 httpx = "^0.23.3"
 asyncpg = "^0.27.0"
 greenlet = "^2.0.2"
@@ -39,10 +38,6 @@ asyncio_mode = "auto"
 
 [tool.poetry.scripts]
 app = "pycommerce:start_server"
-
-[[tool.mypy.overrides]]
-module = ["toolz"]
-ignore_missing_imports = true
 
 [tool.black]
 line-length = 95

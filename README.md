@@ -18,7 +18,6 @@
 - Database: [Postgres](https://www.postgresql.org/)
 - Database migrations: [Alembic](https://alembic.sqlalchemy.org/en/latest/)
 - ORM: [SQLModel](https://sqlmodel.tiangolo.com/)
-- Functional programming utilities: [Toolz](https://toolz.readthedocs.io/en/latest/)
 - Password hashing: [Bcrypt](https://github.com/pyca/bcrypt/)
 - Data parsing and validation: [Pydantic](https://pydantic-docs.helpmanual.io/)
 - Testing: [Pytest](https://docs.pytest.org/en/latest/)
