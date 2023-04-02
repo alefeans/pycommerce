@@ -11,6 +11,13 @@ class CustomerRepo:
     def __init__(self, db: DBSession) -> None:
         self.db = db
 
+    async def persist(self, customer: Customer) -> Customer:
+        db_customer = DBCustomer.parse_obj(customer)
+        self.db.add(db_customer)
+        await self.db.commit()
+        await self.db.refresh(db_customer)
+        return Customer.parse_obj(db_customer)
+
     async def fetch_by_email(self, email: EmailStr) -> Optional[Customer]:
         query = select(DBCustomer).where(DBCustomer.email == email)
         customer = await self.db.scalar(query)
@@ -19,13 +26,6 @@ class CustomerRepo:
     async def fetch_by_id(self, _id: UUID) -> Optional[Customer]:
         customer = await self.db.get(DBCustomer, _id)
         return Customer.parse_obj(customer) if customer else None
-
-    async def persist(self, customer: Customer) -> Customer:
-        db_customer = DBCustomer.parse_obj(customer)
-        self.db.add(db_customer)
-        await self.db.commit()
-        await self.db.refresh(db_customer)
-        return Customer.parse_obj(db_customer)
 
     async def delete(self, _id: UUID) -> bool:
         customer = await self.db.get(DBCustomer, _id)
