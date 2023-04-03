@@ -32,17 +32,10 @@ services:
           - pg-db
         networks:
           - pg-network
-
-    unit-tests:
-        <<: *base
-        command: /bin/sh -c "pip install pytest pytest-asyncio && pytest tests/unit"
-        environment:
-          <<: *env
-          ENV: "test"
     
-    integration-tests:
+    tests:
         <<: *base
-        command: /bin/sh -c "pip install pytest pytest-asyncio && pytest tests/integration"
+        command: /bin/sh -c "pip install pytest pytest-asyncio && pytest tests/"
         environment:
           <<: *env
           ENV: "test"
