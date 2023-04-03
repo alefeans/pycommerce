@@ -1,0 +1,85 @@
+version: '3'
+
+volumes:
+  pgsql-db-data:
+    driver: local
+  pg-admin-data:
+    driver: local
+
+networks: 
+  postgres-network:
+    driver: bridge
+
+services:
+    app:
+        hostname: app
+        image: pycommerce
+        build:
+          context: .
+          dockerfile: Dockerfile
+        environment:
+            ENV: "dev"
+            LOG_LEVEL: "debug"
+            DB_URL: "postgresql+asyncpg://postgres:passwd@pgsql-db:5432/pycommerce_dev"
+            SERVER_RELOAD: false
+        command: /bin/sh -c "alembic upgrade head && python -m pycommerce"
+        ports:
+          - "8080:8080"
+        depends_on:
+          - pgsql-db
+        networks:
+          - postgres-network
+
+    # lint:
+    #     <<: *base
+    #     command: /bin/sh -c "pip install flake8 && flake8 pycommerce/ tests/"
+        
+    # type-check:
+    #     <<: *base
+    #     command: /bin/sh -c "pip install mypy && mypy pycommerce/ tests/"
+
+    # unit-test:
+    #     <<: *base
+    #     command: /bin/sh -c "pip install pytest && pytest tests/unit"
+    #     environment:
+    #       ENV: "test"
+    
+    # integration-test:
+    #     <<: *base
+    #     command: /bin/sh -c "pip install pytest && pytest tests/integration"
+    #     environment:
+    #       <<: *env
+    #       ENV: "test"
+    #       DB_URL: "postgresql+asyncpg://postgres:passwd@pgsql-db:5432/pycommerce_test"
+    #     depends_on:
+    #       - pgsql-db
+    #     networks:
+    #       - postgres-network
+
+    pgsql-db:
+        hostname: pgsql-db
+        image: postgres:15.2-alpine
+        environment:
+          POSTGRES_PASSWORD: "passwd"
+        ports:
+          - "5432:5432"
+        volumes:
+          - pg-data:/var/lib/postgresql/data
+          - ./scripts/pg:/docker-entrypoint-initdb.d
+        networks:
+          - postgres-network
+
+    pgadmin:
+        hostname: pgadmin4
+        image: dpage/pgadmin4
+        environment:
+          PGADMIN_DEFAULT_EMAIL: "local@local.com"
+          PGADMIN_DEFAULT_PASSWORD: "passwd"
+        ports:
+          - "6001:80"
+        volumes:
+          - pg-admin-data:/var/lib/pgadmin
+        depends_on:
+          - pgsql-db
+        networks:
+          - postgres-network
