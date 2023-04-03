@@ -57,6 +57,15 @@ pytest
  # Optionally, you can add pg-admin to the containers list
 
  docker-compose up app pg-db -d
+
+ # or, set the DB_URL env var to point to the dev database, and run
+ 
+ poetry run app
+
+ # or
+
+ python -m pycommerce
+
  ```
 
 ### Type Checking
