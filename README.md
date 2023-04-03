@@ -46,7 +46,7 @@ Run the automated tests with:
 ```sh
 docker-compose up tests
 
-# or, set the DB_URL env var to point to the testing database (you can use the .env.example file as a reference), and run
+# or, set the DB_URL env var to point to the testing database (use the .env.example file as a reference), and run
 
 pytest
 ```
