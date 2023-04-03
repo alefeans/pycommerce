@@ -1,13 +1,13 @@
 version: '3'
 
 volumes:
-  pgsql-db-data:
+  pg-db-data:
     driver: local
   pg-admin-data:
     driver: local
 
 networks: 
-  postgres-network:
+  pg-network:
     driver: bridge
 
 services:
@@ -26,9 +26,9 @@ services:
         ports:
           - "8080:8080"
         depends_on:
-          - pgsql-db
+          - pg-db
         networks:
-          - postgres-network
+          - pg-network
 
     # lint:
     #     <<: *base
@@ -52,34 +52,34 @@ services:
     #       ENV: "test"
     #       DB_URL: "postgresql+asyncpg://postgres:passwd@pgsql-db:5432/pycommerce_test"
     #     depends_on:
-    #       - pgsql-db
+    #       - pg-db
     #     networks:
-    #       - postgres-network
+    #       - pg-network
 
-    pgsql-db:
-        hostname: pgsql-db
+    pg-db:
+        hostname: pg-db
         image: postgres:15.2-alpine
         environment:
           POSTGRES_PASSWORD: "passwd"
         ports:
           - "5432:5432"
         volumes:
-          - pg-data:/var/lib/postgresql/data
           - ./scripts/pg:/docker-entrypoint-initdb.d
+          - pg-db-data:/var/lib/postgresql/data
         networks:
-          - postgres-network
+          - pg-network
 
-    pgadmin:
-        hostname: pgadmin4
+    pg-admin:
+        hostname: pg-admin
         image: dpage/pgadmin4
         environment:
-          PGADMIN_DEFAULT_EMAIL: "local@local.com"
+          PGADMIN_DEFAULT_EMAIL: "local@dev.com"
           PGADMIN_DEFAULT_PASSWORD: "passwd"
         ports:
           - "6001:80"
         volumes:
           - pg-admin-data:/var/lib/pgadmin
         depends_on:
-          - pgsql-db
+          - pg-db
         networks:
-          - postgres-network
+          - pg-network
