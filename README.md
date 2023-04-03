@@ -10,8 +10,8 @@
 
 `Pycommerce` is an example application built with modern Python following TDD, structured with a _variant_  of Clean Architecture, and using the technologies below:
 
-
 - Language: [Python 3.11](https://www.python.org/)
+- Container: [Docker](https://www.docker.com/)
 - Package management: [Poetry](https://python-poetry.org/)
 - Web framework: [FastAPI](https://fastapi.tiangolo.com/)
 - Web server: [Uvicorn](http://www.uvicorn.org/)
@@ -27,7 +27,9 @@
 
 ## Usage
 
-First, activate your virtual environment and run:
+### Installing
+
+Activate your Python [virtual environment](https://docs.python.org/3/library/venv.html) and run:
 
 ```sh
 poetry install
@@ -37,33 +39,47 @@ poetry install
 pip install .
 ```
 
-Create a `.env` file, fill it with the required environment variables using the [.env.example](.env.example) file as an example, and run:
+### Tests
+
+Run the automated tests with:
 
 ```sh
-poetry run app
+docker-compose up tests
 
-# or
-
-python -m pycommerce
-```
-
-## Docker
-
-🚧 TBD
-
-## Tests
-
-First, change the `DB_URL` env var to point to the test database, then run:
-
-```sh
-# add --cov to generate the code coverage report
-
-poetry run pytest
-
-# or
+# or, set the DB_URL env var to point to the testing database (you can use the .env.example file as a reference), and run
 
 pytest
 ```
+
+### Running the Application
+
+ ```sh
+ # Optionally, you can add pg-admin to the containers list
+
+ docker-compose up app pg-db -d
+ ```
+
+### Type Checking
+
+```sh
+mypy pycommerce tests
+```
+
+### Linting
+
+```sh
+flake8 pycommerce tests
+```
+
+### Code Formatting
+
+```sh
+black --check pycommerce tests
+```
+
+## Project Structure and Code Design
+
+🚧 TBD
 
 ## License
 
