@@ -20,7 +20,7 @@ services:
         environment:
             ENV: "dev"
             LOG_LEVEL: "debug"
-            DB_URL: "postgresql+asyncpg://postgres:passwd@pgsql-db:5432/pycommerce_dev"
+            DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_dev"
             SERVER_RELOAD: false
         command: /bin/sh -c "alembic upgrade head && python -m pycommerce"
         ports:
@@ -29,6 +29,35 @@ services:
           - pg-db
         networks:
           - pg-network
+
+    pg-db:
+        hostname: pg-db
+        image: postgres:15.2-alpine
+        environment:
+          POSTGRES_PASSWORD: "passwd"
+        ports:
+          - "5432:5432"
+        volumes:
+          # - ./scripts/pg:/docker-entrypoint-initdb.d
+          - pg-db-data:/var/lib/postgresql/data
+        networks:
+          - pg-network
+
+    pg-admin:
+        hostname: pg-admin
+        image: dpage/pgadmin4
+        environment:
+          PGADMIN_DEFAULT_EMAIL: "local@dev.com"
+          PGADMIN_DEFAULT_PASSWORD: "passwd"
+        ports:
+          - "6001:80"
+        volumes:
+          - pg-admin-data:/var/lib/pgadmin
+        depends_on:
+          - pg-db
+        networks:
+          - pg-network
+
 
     # lint:
     #     <<: *base
@@ -55,31 +84,3 @@ services:
     #       - pg-db
     #     networks:
     #       - pg-network
-
-    pg-db:
-        hostname: pg-db
-        image: postgres:15.2-alpine
-        environment:
-          POSTGRES_PASSWORD: "passwd"
-        ports:
-          - "5432:5432"
-        volumes:
-          - ./scripts/pg:/docker-entrypoint-initdb.d
-          - pg-db-data:/var/lib/postgresql/data
-        networks:
-          - pg-network
-
-    pg-admin:
-        hostname: pg-admin
-        image: dpage/pgadmin4
-        environment:
-          PGADMIN_DEFAULT_EMAIL: "local@dev.com"
-          PGADMIN_DEFAULT_PASSWORD: "passwd"
-        ports:
-          - "6001:80"
-        volumes:
-          - pg-admin-data:/var/lib/pgadmin
-        depends_on:
-          - pg-db
-        networks:
-          - pg-network
