@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 Password = Field(..., min_length=8, max_length=100)
 
 
-class Customer(SQLModel, table=True):
+class User(SQLModel, table=True):
     id: UUID = Field(primary_key=True)
     name: str
     email: EmailStr

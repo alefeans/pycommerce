@@ -6,7 +6,7 @@ ID = Field(default_factory=uuid4)
 Password = Field(..., min_length=8, max_length=100)
 
 
-class Customer(BaseModel):
+class User(BaseModel):
     id: UUID = ID
     name: str
     email: EmailStr
@@ -17,13 +17,13 @@ class Customer(BaseModel):
         orm_mode = True
 
 
-class CreateCustomerDTO(BaseModel):
+class CreateUserDTO(BaseModel):
     name: str
     email: EmailStr
     password: str = Password
 
 
-class CustomerResponse(BaseModel):
+class UserResponse(BaseModel):
     id: UUID = ID
     name: str
     email: EmailStr

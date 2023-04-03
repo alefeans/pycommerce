@@ -1,7 +1,7 @@
 from typing import Protocol
 
 
-class HashingService(Protocol):
+class HashingProvider(Protocol):
     @staticmethod
     def hash(value: str) -> str:
         ...

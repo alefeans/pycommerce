@@ -1,2 +1,2 @@
-class CustomerAlreadyExists(Exception):
+class UserAlreadyExists(Exception):
     pass
