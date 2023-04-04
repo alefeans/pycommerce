@@ -92,7 +92,11 @@ In order to enhance your development workflow and streamline the process of crea
 
 ![](docs/tdd_workflow.gif)
 
-## Project Structure and Code Design
+## Project Structure
+
+🚧 TBD
+
+## Code Design
 
 🚧 TBD
 
