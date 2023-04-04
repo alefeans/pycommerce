@@ -90,7 +90,7 @@ black --check pycommerce tests
 
 In order to enhance your development workflow and streamline the process of creating new features using TDD in Python, you can leverage [pytest-watch](https://pypi.org/project/pytest-watch/) (which is already included in the dependencies), to automatically trigger tests whenever a piece of code is modified. This helps to accelerate the feedback loop, allowing you to iterate more quickly and efficiently. For instance:
 
-![](docs/dev_workflow.gif)
+![](docs/tdd_workflow.gif)
 
 ## Project Structure and Code Design
 
