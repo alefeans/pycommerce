@@ -22,14 +22,15 @@ services:
             LOG_LEVEL: "debug"
             DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_dev"
             SERVER_RELOAD: "false"
+        depends_on:
+          pg-db:
+            condition: service_healthy
 
     app:
         <<: *base
         command: /bin/sh -c "alembic upgrade head && python -m pycommerce"
         ports:
           - "8080:8080"
-        depends_on:
-          - pg-db
         networks:
           - pg-network
     
@@ -40,8 +41,6 @@ services:
           <<: *env
           ENV: "test"
           DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_test"
-        depends_on:
-          - pg-db
         networks:
           - pg-network
 
@@ -57,6 +56,11 @@ services:
           - pg-db-data:/var/lib/postgresql/data
         networks:
           - pg-network
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready"]
+          interval: 5s
+          timeout: 3s
+          retries: 5
 
     pg-admin:
         hostname: pg-admin
