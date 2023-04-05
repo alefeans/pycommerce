@@ -78,6 +78,8 @@ alembic upgrade head && poetry run app
 alembic upgrade head && python -m pycommerce
 ```
 
+⚠️ If you're not using Docker, remember to run the [init.sql](scripts/pg/init.sql) script to create the databases before running the application.
+
 ### Type Checking
 
 ```sh
