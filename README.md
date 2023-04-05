@@ -8,7 +8,7 @@
   </a>
 </p>
 
-`Pycommerce` is an example application built with modern Python following TDD, structured with a _variant_  of Clean Architecture, and using the technologies below:
+`Pycommerce` is an example application built with modern Python following TDD, structured with a _variant_ of Clean Architecture, and using the technologies below:
 
 - Language: [Python 3.11](https://www.python.org/)
 - Container: [Docker](https://www.docker.com/)
@@ -39,6 +39,17 @@ poetry install
 pip install .
 ```
 
+### Configuration
+
+`Pycommerce` uses environment variables for configuration. You can check all the available options [here](pycommerce/config.py). You can set them manually like this:
+
+```sh
+export DB_URL="<database_url>"
+...
+```
+
+Or, you can create and fill a `.env` file using the [.env.example](.env.example) file as a reference.
+
 ### Tests
 
 Run the automated tests with:
@@ -46,27 +57,27 @@ Run the automated tests with:
 ```sh
 docker-compose up tests
 
-# or, set the DB_URL env var to point to the testing database (use the .env.example file as a reference), and run
+# or, set the DB_URL env var to point to the testing database and run
 
 pytest
 ```
 
 ### Running the Application
 
- ```sh
- # Optionally, you can add pg-admin to the containers list
+```sh
+# Optionally, you can add pg-admin to the containers list
 
- docker-compose up app pg-db -d
+docker-compose up app pg-db -d
 
- # or, set the DB_URL env var to point to the dev database, and run
- 
- alembic upgrade head && poetry run app
+# or, set the DB_URL env var to point to the dev database, and run
 
- # or
+alembic upgrade head && poetry run app
 
- alembic upgrade head && python -m pycommerce
+# or
 
- ```
+alembic upgrade head && python -m pycommerce
+
+```
 
 ### Type Checking
 
