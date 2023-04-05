@@ -76,7 +76,6 @@ alembic upgrade head && poetry run app
 # or
 
 alembic upgrade head && python -m pycommerce
-
 ```
 
 ### Type Checking
