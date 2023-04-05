@@ -21,7 +21,7 @@ services:
             ENV: "dev"
             LOG_LEVEL: "debug"
             DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_dev"
-            SERVER_RELOAD: false
+            SERVER_RELOAD: "false"
 
     app:
         <<: *base
