@@ -60,11 +60,11 @@ pytest
 
  # or, set the DB_URL env var to point to the dev database, and run
  
- poetry run app
+ alembic upgrade head && poetry run app
 
  # or
 
- python -m pycommerce
+ alembic upgrade head && python -m pycommerce
 
  ```
 
