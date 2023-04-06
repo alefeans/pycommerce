@@ -1,4 +1,5 @@
 from uuid import UUID, uuid4
+from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
 
 
@@ -21,6 +22,11 @@ class CreateUserDTO(BaseModel):
     name: str
     email: EmailStr
     password: str = Password
+
+
+class UpdateUserDTO(BaseModel):
+    name: Optional[str]
+    email: Optional[EmailStr]
 
 
 class UserResponse(BaseModel):

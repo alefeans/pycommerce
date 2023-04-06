@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import EmailStr
 from sqlmodel import select
 from pycommerce.infra.db import DBSession
-from pycommerce.core.entities.user import User
+from pycommerce.core.entities.user import User, UpdateUserDTO
 from pycommerce.infra.db.models.user import User as DBUser
 
 
@@ -34,3 +34,15 @@ class UserRepo:
         await self.db.delete(user)
         await self.db.commit()
         return True
+
+    async def update(self, _id: UUID, dto: UpdateUserDTO) -> Optional[User]:
+        user = await self.db.get(DBUser, _id)
+        if not user:
+            return None
+        update_data = dto.dict(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(user, key, value)
+        self.db.add(user)
+        await self.db.commit()
+        await self.db.refresh(user)
+        return User.parse_obj(user)

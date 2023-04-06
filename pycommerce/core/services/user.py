@@ -3,6 +3,7 @@ from typing import Optional
 from pycommerce.core.entities.user import (
     User,
     CreateUserDTO,
+    UpdateUserDTO,
     UserResponse,
 )
 from pycommerce.core.protocols.user import UserRepo
@@ -27,3 +28,8 @@ async def fetch_by_id(repo: UserRepo, _id: UUID) -> Optional[UserResponse]:
 
 async def delete(repo: UserRepo, _id: UUID) -> bool:
     return await repo.delete(_id)
+
+
+async def update(repo: UserRepo, _id: UUID, dto: UpdateUserDTO) -> Optional[UserResponse]:
+    user = await repo.update(_id, dto)
+    return UserResponse.parse_obj(user) if user else None

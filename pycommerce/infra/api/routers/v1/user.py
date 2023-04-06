@@ -4,7 +4,7 @@ from functools import partial
 from fastapi import Depends, HTTPException, APIRouter
 from pycommerce.core.services import user
 from pycommerce.core.services.exceptions import UserAlreadyExists
-from pycommerce.core.entities.user import UserResponse, CreateUserDTO
+from pycommerce.core.entities.user import UserResponse, CreateUserDTO, UpdateUserDTO
 from pycommerce.infra.db.repositories.user import UserRepo
 from pycommerce.infra.api.dependencies import get_repo, HashingService
 
@@ -56,3 +56,18 @@ async def get(user_id: UUID, repo: Repo) -> UserResponse:
 async def delete(user_id: UUID, repo: Repo) -> None:
     if not await user.delete(repo, user_id):
         raise HTTPException(status_code=404, detail="User not found")
+
+
+@router.patch(
+    "/{user_id}",
+    summary="Update User information",
+    responses={
+        200: {"description": "User updated"},
+        404: {"description": "User not found"},
+    },
+)
+async def patch(user_id: UUID, dto: UpdateUserDTO, repo: Repo) -> UserResponse:
+    response = await user.update(repo, user_id, dto)
+    if not response:
+        raise HTTPException(status_code=404, detail="User not found")
+    return response
