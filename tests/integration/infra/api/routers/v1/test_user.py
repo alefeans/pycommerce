@@ -16,6 +16,11 @@ def create_user_payload():
     }
 
 
+@pytest.fixture
+def update_user_payload():
+    return {"name": "Updated", "email": "updated@gmail.com"}
+
+
 async def test_get_user_not_found(client, user_route):
     response = await client.get(f"{user_route}/{uuid4()}")
     data, status_code = response.json(), response.status_code
@@ -65,7 +70,46 @@ async def test_delete_user_not_found(client, user_route):
 
 
 async def test_delete_user_successfully(client, user_route, create_user_payload):
-    created_response = await client.post(user_route, json=create_user_payload)
-    _id = created_response.json()["id"]
+    create_response = await client.post(user_route, json=create_user_payload)
+    _id = create_response.json()["id"]
     delete_response = await client.delete(f"{user_route}/{_id}")
     assert delete_response.status_code == 204
+
+
+async def test_patch_user_not_found(client, user_route, update_user_payload):
+    response = await client.patch(f"{user_route}/{uuid4()}", json=update_user_payload)
+    data, status_code = response.json(), response.status_code
+    assert status_code == 404
+    assert data == {"detail": "User not found"}
+
+
+async def test_patch_all_user_data_successfully(
+    client, user_route, create_user_payload, update_user_payload
+):
+    create_response = await client.post(user_route, json=create_user_payload)
+    _id = create_response.json()["id"]
+
+    patch_response = await client.patch(f"{user_route}/{_id}", json=update_user_payload)
+    assert patch_response.status_code == 200
+    assert patch_response.json()["name"] == update_user_payload["name"]
+    assert patch_response.json()["email"] == update_user_payload["email"]
+
+
+async def test_patch_partial_user_data_successfully(
+    client, user_route, create_user_payload, update_user_payload
+):
+    create_response = await client.post(user_route, json=create_user_payload)
+    _id = create_response.json()["id"]
+
+    update_user_payload["email"] = create_user_payload["email"]
+    patch_response = await client.patch(f"{user_route}/{_id}", json=update_user_payload)
+    assert patch_response.status_code == 200
+    assert patch_response.json()["name"] == update_user_payload["name"]
+    assert patch_response.json()["email"] == create_user_payload["email"]
+
+    del update_user_payload["email"]
+    update_user_payload["name"] = "only name"
+    patch_response = await client.patch(f"{user_route}/{_id}", json=update_user_payload)
+    assert patch_response.status_code == 200
+    assert patch_response.json()["name"] == update_user_payload["name"]
+    assert patch_response.json()["email"] == create_user_payload["email"]

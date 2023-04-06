@@ -2,14 +2,19 @@ import pytest
 from pydantic import EmailStr
 from pycommerce.core.services import user
 from pycommerce.core.services.exceptions import UserAlreadyExists
-from pycommerce.core.entities.user import User, CreateUserDTO
+from pycommerce.core.entities.user import User, CreateUserDTO, UpdateUserDTO
 from pycommerce.core.protocols.user import UserRepo
 from pycommerce.core.protocols.common import HashingProvider
 
 
 @pytest.fixture
 def create_user_dto():
-    return CreateUserDTO(name="Test", email=EmailStr("test@gmail.com"), password="password")
+    return CreateUserDTO(name="Test", email=EmailStr("test@test.com"), password="password")
+
+
+@pytest.fixture
+def update_user_dto():
+    return UpdateUserDTO(name="Updated", email=EmailStr("updated@test.com"))
 
 
 @pytest.fixture
@@ -79,3 +84,20 @@ async def test_if_returns_true_when_deleting_existing_user(user_repo, user_ok):
     result = await user.delete(user_repo, user_ok.id)
     user_repo.delete.assert_called_once()
     assert result is True
+
+
+async def test_if_returns_none_when_updating_nonexisting_user(
+    user_repo, user_ok, update_user_dto
+):
+    user_repo.update.return_value = None
+    result = await user.update(user_repo, user_ok.id, update_user_dto)
+    user_repo.update.assert_called_once()
+    assert result is None
+
+
+async def test_if_replaces_user_successfully(user_repo, user_ok, update_user_dto):
+    user_repo.update.return_value = User(password=user_ok.password, **update_user_dto.dict())
+    result = await user.update(user_repo, user_ok.id, update_user_dto)
+    user_repo.update.assert_called_once()
+    assert result.name == update_user_dto.name  # type: ignore
+    assert result.email == update_user_dto.email  # type: ignore
