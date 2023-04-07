@@ -22,8 +22,8 @@ CredentialsException = HTTPException(
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
-OauthToken = Annotated[str, Depends(oauth2_scheme)]
-OauthForm = Annotated[OAuth2PasswordRequestForm, Depends()]
+Oauth2Token = Annotated[str, Depends(oauth2_scheme)]
+Oauth2Form = Annotated[OAuth2PasswordRequestForm, Depends()]
 
 
 class Token(BaseModel):
@@ -50,7 +50,7 @@ def create_access_token(data: Dict[str, Any]) -> Token:
     return Token(access_token=access_token, expire=expire.timestamp())
 
 
-async def get_current_user(repo: UserRepo, token: OauthToken) -> UserResponse:
+async def get_current_user(repo: UserRepo, token: Oauth2Token) -> UserResponse:
     _id = decode_token(token)
     user = await fetch_by_id(repo, _id)
     if user is None:

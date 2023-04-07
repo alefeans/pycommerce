@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pycommerce.infra.api.dependencies.auth import (
     CurrentUser,
-    OauthForm,
+    Oauth2Form,
     Token,
     create_access_token,
 )
@@ -22,7 +22,7 @@ router = APIRouter()
     },
     operation_id="Credentials",
 )
-async def token(repo: UserRepo, hasher: Hasher, form_data: OauthForm) -> Token:
+async def token(repo: UserRepo, hasher: Hasher, form_data: Oauth2Form) -> Token:
     user = await authenticate(repo, hasher, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
