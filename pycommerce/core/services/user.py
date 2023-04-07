@@ -1,12 +1,12 @@
+from uuid import UUID
 from typing import Optional
+from pydantic import EmailStr
 from pycommerce.core.entities.user import (
     User,
     CreateUserDTO,
     UpdateUserDTO,
     UserResponse,
-    UUID,
     Password,
-    EmailStr,
 )
 from pycommerce.core.protocols.user import UserRepo
 from pycommerce.core.protocols.common import HashingProvider
