@@ -20,7 +20,7 @@ router = APIRouter()
         200: {"description": "User authenticated"},
         401: {"description": "User unauthorized"},
     },
-    operation_id="Credentials"
+    operation_id="Credentials",
 )
 async def token(repo: UserRepo, hasher: Hasher, form_data: OauthForm) -> Token:
     user = await authenticate(repo, hasher, form_data.username, form_data.password)
