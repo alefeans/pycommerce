@@ -80,6 +80,11 @@ alembic upgrade head && poetry run app
 alembic upgrade head && python -m pycommerce
 ```
 
+Open the browser on [http://localhost:8080/docs](http://localhost:8080/docs) to see the OpenAPI docs:
+
+![](docs/openapi.png)
+
+
 ⚠️ If you're not using Docker, remember to run the [init.sql](scripts/pg/init.sql) script to create the databases before running the application.
 
 ### Type Checking
