@@ -1,8 +1,8 @@
+from functools import partial
 from typing import Any, Annotated, Generator
 from fastapi import Depends
 from pycommerce.infra.db import get_session, DBSession
-from pycommerce.infra.providers.crypto import hasher
-from pycommerce.core.protocols.common import HashingProvider
+from pycommerce.infra.db.repositories import user
 
 Database = Annotated[DBSession, Depends(get_session)]
 
@@ -11,8 +11,4 @@ def get_repo(Repo: Any, db: Database) -> Generator[Any, None, None]:
     yield Repo(db)
 
 
-def get_hasher():
-    yield hasher
-
-
-Hasher = Annotated[HashingProvider, Depends(get_hasher)]
+UserRepo = Annotated[user.UserRepo, Depends(partial(get_repo, user.UserRepo))]

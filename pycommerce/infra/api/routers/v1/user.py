@@ -1,15 +1,12 @@
 from uuid import UUID
-from typing import Annotated
-from functools import partial
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import APIRouter, HTTPException
 from pycommerce.core.services import user
 from pycommerce.core.services.exceptions import UserAlreadyExists
 from pycommerce.core.entities.user import UserResponse, CreateUserDTO, UpdateUserDTO
-from pycommerce.infra.db.repositories.user import UserRepo
-from pycommerce.infra.api.dependencies import get_repo, Hasher
+from pycommerce.infra.api.dependencies.repositories import UserRepo
+from pycommerce.infra.api.dependencies.crypto import Hasher
 
 router = APIRouter()
-Repo = Annotated[UserRepo, Depends(partial(get_repo, UserRepo))]
 
 
 @router.post(
@@ -21,7 +18,7 @@ Repo = Annotated[UserRepo, Depends(partial(get_repo, UserRepo))]
         409: {"description": "User already exists"},
     },
 )
-async def create(dto: CreateUserDTO, repo: Repo, hasher: Hasher) -> UserResponse:
+async def create(dto: CreateUserDTO, repo: UserRepo, hasher: Hasher) -> UserResponse:
     try:
         response = await user.create(repo, hasher, dto)
     except UserAlreadyExists:
@@ -37,7 +34,7 @@ async def create(dto: CreateUserDTO, repo: Repo, hasher: Hasher) -> UserResponse
         404: {"description": "User not found"},
     },
 )
-async def get(user_id: UUID, repo: Repo) -> UserResponse:
+async def get(user_id: UUID, repo: UserRepo) -> UserResponse:
     response = await user.fetch_by_id(repo, user_id)
     if not response:
         raise HTTPException(status_code=404, detail="User not found")
@@ -53,7 +50,7 @@ async def get(user_id: UUID, repo: Repo) -> UserResponse:
         404: {"description": "User not found"},
     },
 )
-async def delete(user_id: UUID, repo: Repo) -> None:
+async def delete(user_id: UUID, repo: UserRepo) -> None:
     if not await user.delete(repo, user_id):
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -66,7 +63,7 @@ async def delete(user_id: UUID, repo: Repo) -> None:
         404: {"description": "User not found"},
     },
 )
-async def patch(user_id: UUID, dto: UpdateUserDTO, repo: Repo) -> UserResponse:
+async def patch(user_id: UUID, dto: UpdateUserDTO, repo: UserRepo) -> UserResponse:
     response = await user.update(repo, user_id, dto)
     if not response:
         raise HTTPException(status_code=404, detail="User not found")
