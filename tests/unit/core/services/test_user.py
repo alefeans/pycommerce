@@ -124,7 +124,9 @@ async def test_if_returns_none_when_authenticating_nonexisting_user(
     assert result is None
 
 
-async def test_if_returns_none_when_authenticating_with_invalid_password(user_repo, hasher, user_ok):
+async def test_if_returns_none_when_authenticating_with_invalid_password(
+    user_repo, hasher, user_ok
+):
     user_repo.fetch_by_email.return_value = user_ok
     hasher.verify.return_value = False
 
