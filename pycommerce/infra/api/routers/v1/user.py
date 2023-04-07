@@ -6,7 +6,7 @@ from pycommerce.core.services import user
 from pycommerce.core.services.exceptions import UserAlreadyExists
 from pycommerce.core.entities.user import UserResponse, CreateUserDTO, UpdateUserDTO
 from pycommerce.infra.db.repositories.user import UserRepo
-from pycommerce.infra.api.dependencies import get_repo, HashingService
+from pycommerce.infra.api.dependencies import get_repo, Hasher
 
 router = APIRouter()
 Repo = Annotated[UserRepo, Depends(partial(get_repo, UserRepo))]
@@ -21,7 +21,7 @@ Repo = Annotated[UserRepo, Depends(partial(get_repo, UserRepo))]
         409: {"description": "User already exists"},
     },
 )
-async def create(dto: CreateUserDTO, repo: Repo, hasher: HashingService) -> UserResponse:
+async def create(dto: CreateUserDTO, repo: Repo, hasher: Hasher) -> UserResponse:
     try:
         response = await user.create(repo, hasher, dto)
     except UserAlreadyExists:

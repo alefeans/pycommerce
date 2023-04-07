@@ -17,6 +17,8 @@ httpx = "^0.23.3"
 asyncpg = "^0.27.0"
 greenlet = "^2.0.2"
 bcrypt = "^4.0.1"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -35,6 +37,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 testpaths = "tests"
 asyncio_mode = "auto"
+filterwarnings = "ignore::DeprecationWarning"
 
 [tool.poetry.scripts]
 app = "pycommerce:start_server"

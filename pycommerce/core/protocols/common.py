@@ -2,10 +2,8 @@ from typing import Protocol
 
 
 class HashingProvider(Protocol):
-    @staticmethod
-    def hash(value: str) -> str:
+    def hash(self, value: str) -> str:
         ...
 
-    @staticmethod
-    def check(value: str, hashed: str) -> bool:
+    def verify(self, value: str, hashed: str) -> bool:
         ...
