@@ -1,10 +1,12 @@
-from uuid import UUID
 from typing import Optional
 from pycommerce.core.entities.user import (
     User,
     CreateUserDTO,
     UpdateUserDTO,
     UserResponse,
+    UUID,
+    Password,
+    EmailStr,
 )
 from pycommerce.core.protocols.user import UserRepo
 from pycommerce.core.protocols.common import HashingProvider
@@ -33,3 +35,15 @@ async def delete(repo: UserRepo, _id: UUID) -> bool:
 async def update(repo: UserRepo, _id: UUID, dto: UpdateUserDTO) -> Optional[UserResponse]:
     user = await repo.update(_id, dto)
     return UserResponse.parse_obj(user) if user else None
+
+
+async def authenticate(
+    repo: UserRepo, hasher: HashingProvider, email: str, password: Password
+) -> Optional[UserResponse]:
+    user = await repo.fetch_by_email(EmailStr(email))
+    if not user:
+        return None
+
+    if not hasher.verify(password, user.password):
+        return None
+    return UserResponse.parse_obj(user)
