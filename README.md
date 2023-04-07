@@ -46,6 +46,7 @@ pip install .
 
 ```sh
 export DB_URL="<database_url>"
+export JWT_SECRET_KEY="<my_super_secret_key>"
 ...
 ```
 
