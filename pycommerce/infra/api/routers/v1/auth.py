@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.post(
     "/token",
-    summary="Create Oauth Token",
+    summary="Create access Token",
     responses={
         200: {"description": "User authenticated"},
         401: {"description": "User unauthorized"},
