@@ -33,6 +33,10 @@ async def delete(repo: UserRepo, _id: UUID) -> bool:
 
 
 async def update(repo: UserRepo, _id: UUID, dto: UpdateUserDTO) -> Optional[UserResponse]:
+    # FIXME
+    if dto.email:
+        if await repo.fetch_by_email(dto.email):
+            raise UserAlreadyExists(f"Email {dto.email} is already in use")
     user = await repo.update(_id, dto)
     return UserResponse.parse_obj(user) if user else None
 

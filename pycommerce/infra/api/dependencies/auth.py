@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Annotated
 from pydantic import BaseModel
 from jose import JWTError, jwt
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Path
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pycommerce.config import get_settings
 from pycommerce.core.entities.user import UserResponse
@@ -54,8 +54,31 @@ async def get_current_user(repo: UserRepo, token: Oauth2Token) -> UserResponse:
     _id = decode_token(token)
     user = await fetch_by_id(repo, _id)
     if user is None:
-        raise CredentialsException
+        raise HTTPException(status_code=404, detail="User not found")
     return user
 
 
 CurrentUser = Annotated[UserResponse, Depends(get_current_user)]
+
+
+async def authorization_check(
+    current_user: CurrentUser, user_id: UUID = Path(...)
+) -> UserResponse:
+    # TODO ADD ADMIN CHECK
+    # if current_user.is_admin:
+    #     return current_user
+    if user_id != current_user.id:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return current_user
+
+
+Authorization = Annotated[UserResponse, Depends(authorization_check)]
+
+
+# async def get_current_admin_user(user: CurrentUser) -> UserResponse:
+#     if user.is_admin:
+#         return user
+#     raise CredentialsException
+
+
+# AdminUser = Annotated[UserResponse, Depends(get_current_admin_user)]

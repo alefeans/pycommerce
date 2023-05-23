@@ -5,6 +5,7 @@ from pycommerce.core.services.exceptions import UserAlreadyExists
 from pycommerce.core.entities.user import UserResponse, CreateUserDTO, UpdateUserDTO
 from pycommerce.infra.api.dependencies.repositories import UserRepo
 from pycommerce.infra.api.dependencies.crypto import Hasher
+from pycommerce.infra.api.dependencies.auth import Authorization
 
 router = APIRouter()
 
@@ -31,10 +32,11 @@ async def create(dto: CreateUserDTO, repo: UserRepo, hasher: Hasher) -> UserResp
     summary="Get User information",
     responses={
         200: {"description": "User found"},
+        401: {"description": "Unauthorized"},
         404: {"description": "User not found"},
     },
 )
-async def get(user_id: UUID, repo: UserRepo) -> UserResponse:
+async def get(user_id: UUID, repo: UserRepo, auth: Authorization) -> UserResponse:
     response = await user.fetch_by_id(repo, user_id)
     if not response:
         raise HTTPException(status_code=404, detail="User not found")
@@ -47,10 +49,11 @@ async def get(user_id: UUID, repo: UserRepo) -> UserResponse:
     summary="Delete User",
     responses={
         204: {"description": "User deleted successfully"},
+        401: {"description": "Unauthorized"},
         404: {"description": "User not found"},
     },
 )
-async def delete(user_id: UUID, repo: UserRepo) -> None:
+async def delete(user_id: UUID, repo: UserRepo, auth: Authorization) -> None:
     if not await user.delete(repo, user_id):
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -60,11 +63,18 @@ async def delete(user_id: UUID, repo: UserRepo) -> None:
     summary="Update User information",
     responses={
         200: {"description": "User updated"},
+        401: {"description": "Unauthorized"},
         404: {"description": "User not found"},
+        409: {"description": "Email address is already in use"},
     },
 )
-async def patch(user_id: UUID, dto: UpdateUserDTO, repo: UserRepo) -> UserResponse:
-    response = await user.update(repo, user_id, dto)
+async def patch(
+    user_id: UUID, dto: UpdateUserDTO, repo: UserRepo, auth: Authorization
+) -> UserResponse:
+    try:
+        response = await user.update(repo, user_id, dto)
+    except UserAlreadyExists:
+        raise HTTPException(409, detail="Email address is already in use")
     if not response:
         raise HTTPException(status_code=404, detail="User not found")
     return response

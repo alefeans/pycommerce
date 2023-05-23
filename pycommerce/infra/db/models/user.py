@@ -10,3 +10,4 @@ class User(SQLModel, table=True):
     name: str
     email: EmailStr
     password: str = Password
+    is_admin: bool = False
