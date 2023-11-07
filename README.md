@@ -22,7 +22,7 @@
 - Authentication: [OAuth2 + JWT](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
 - Data parsing and validation: [Pydantic](https://pydantic-docs.helpmanual.io/)
 - Testing: [Pytest](https://docs.pytest.org/en/latest/)
-- Linter: [Flake8](https://flake8.pycqa.org/en/latest/)
+- Linter: [Ruff](https://github.com/astral-sh/ruff)
 - Type checker: [Mypy](https://mypy.readthedocs.io/en/stable/index.html)
 - Code formatter: [Black](https://github.com/psf/black)
 
@@ -84,7 +84,6 @@ Open the browser on [http://localhost:8080/docs](http://localhost:8080/docs) to 
 
 ![](docs/openapi.png)
 
-
 ⚠️ If you're not using Docker, remember to run the [init.sql](scripts/pg/init.sql) script to create the databases before running the application.
 
 ### Type Checking
@@ -96,7 +95,7 @@ mypy pycommerce tests
 ### Linting
 
 ```sh
-flake8 pycommerce tests
+ruff check .
 ```
 
 ### Code Formatting
