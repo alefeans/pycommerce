@@ -1,49 +1,62 @@
-from uuid import UUID
 from typing import Optional
-from pydantic import EmailStr
-from pycommerce.core.entities.user import (
-    User,
-    CreateUserDTO,
-    UpdateUserDTO,
+from uuid import UUID
+
+from pycommerce.core.dtos.user import (
+    CreateUser,
+    UpdateUser,
     UserResponse,
-    Password,
 )
-from pycommerce.core.protocols.user import UserRepo
-from pycommerce.core.protocols.common import HashingProvider
-from pycommerce.core.services.exceptions import UserAlreadyExists
+from pycommerce.core.entities.user import Email, Password, User
+from pycommerce.core.protocols.user import UserHasher, UserRepo, UserUnitOfWork
 
 
-async def create(repo: UserRepo, hasher: HashingProvider, dto: CreateUserDTO) -> UserResponse:
-    if await repo.fetch_by_email(dto.email):
-        raise UserAlreadyExists(f"User {dto.email} already exists")
-
-    dto.password = hasher.hash(dto.password)
-    user = User.parse_obj(dto)
-    result = await repo.persist(user)
-    return UserResponse.parse_obj(result)
+class UserAlreadyExists(Exception):
+    pass
 
 
-async def fetch_by_id(repo: UserRepo, _id: UUID) -> Optional[UserResponse]:
-    user = await repo.fetch_by_id(_id)
-    return UserResponse.parse_obj(user) if user else None
+async def create(uow: UserUnitOfWork, hasher: UserHasher, dto: CreateUser) -> UserResponse:
+    async with uow:
+        if await uow.user_repo.get_by_email(dto.email):
+            raise UserAlreadyExists(f"User {dto.email} already exists")
+
+        User.validate_password(dto.password)
+        user = User(dto.name, dto.email, hasher.hash(dto.password))
+        created_user = await uow.user_repo.persist(user)
+        return UserResponse(created_user.id, created_user.name, created_user.email)
+
+
+async def get_by_id(repo: UserRepo, _id: UUID) -> Optional[UserResponse]:
+    user = await repo.get_by_id(_id)
+    if user:
+        return UserResponse(user.id, user.name, user.email)
 
 
 async def delete(repo: UserRepo, _id: UUID) -> bool:
     return await repo.delete(_id)
 
 
-async def update(repo: UserRepo, _id: UUID, dto: UpdateUserDTO) -> Optional[UserResponse]:
-    user = await repo.update(_id, dto)
-    return UserResponse.parse_obj(user) if user else None
+async def update(uow: UserUnitOfWork, _id: UUID, dto: UpdateUser) -> Optional[UserResponse]:
+    async with uow:
+        existing_user = await uow.user_repo.get_by_id(_id)
+
+        if existing_user is None:
+            return None
+
+        updated_user = await uow.user_repo.update(
+            User(
+                dto.name or existing_user.name,
+                dto.email or existing_user.email,
+                existing_user.password,
+                existing_user.id,
+            )
+        )
+
+        return UserResponse(updated_user.id, updated_user.name, updated_user.email)
 
 
 async def authenticate(
-    repo: UserRepo, hasher: HashingProvider, email: str, password: Password
+    repo: UserRepo, hasher: UserHasher, email: Email, password: Password
 ) -> Optional[UserResponse]:
-    user = await repo.fetch_by_email(EmailStr(email))
-    if not user:
-        return None
-
-    if not hasher.verify(password, user.password):
-        return None
-    return UserResponse.parse_obj(user)
+    user = await repo.get_by_email(email)
+    if user and hasher.verify(password, user.password):
+        return UserResponse(user.id, user.name, user.email)
