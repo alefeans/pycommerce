@@ -1,4 +1,5 @@
 import uvicorn
+
 from pycommerce.config import get_settings
 from pycommerce.infra.api.app import create_app
 
