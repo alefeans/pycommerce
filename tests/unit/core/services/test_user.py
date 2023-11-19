@@ -28,16 +28,15 @@ class FakeUserRepo:
         self.email_store: Dict[Email, User] = {}
         self.id_store: Dict[UUID, User] = {}
 
-    async def persist(self, user: User) -> User:
+    async def persist(self, user: User) -> None:
         self.email_store[user.email] = user
         self.id_store[user.id] = user
-        return user
-
-    async def get_by_email(self, email: Email) -> Optional[User]:
-        return self.email_store.get(email)
 
     async def get_by_id(self, _id: UUID) -> Optional[User]:
         return self.id_store.get(_id)
+
+    async def get_by_email(self, email: Email) -> Optional[User]:
+        return self.email_store.get(email)
 
     async def delete(self, _id: UUID) -> bool:
         if _id not in self.id_store:
@@ -47,7 +46,7 @@ class FakeUserRepo:
         del self.email_store[user.email]
         return True
 
-    async def update(self, user: User) -> User:
+    async def update(self, user: User) -> Optional[User]:
         old = self.id_store[user.id]
         updated = User(
             user.name or old.name,
@@ -147,15 +146,15 @@ async def test_if_returns_none_when_getting_nonexisting_user(user_repo):
     assert await user.get_by_id(user_repo, uuid4()) is None
 
 
-async def test_if_returns_false_when_deleting_nonexisting_user(user_repo):
-    assert await user.delete(user_repo, uuid4()) is False
+async def test_if_returns_false_when_deleting_nonexisting_user(user_uow):
+    assert await user.delete(user_uow, uuid4()) is False
 
 
 async def test_if_returns_true_when_deleting_existing_user(user_uow, hasher, create_user_dto):
     created_user = await user.create(user_uow, hasher, create_user_dto)
 
     assert len(user_uow.user_repo) == 1
-    assert await user.delete(user_uow.user_repo, created_user.id) is True
+    assert await user.delete(user_uow, created_user.id) is True
     assert len(user_uow.user_repo) == 0
 
 

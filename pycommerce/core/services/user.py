@@ -21,8 +21,8 @@ async def create(uow: UserUnitOfWork, hasher: UserHasher, dto: CreateUser) -> Us
 
         User.validate_password(dto.password)
         user = User(dto.name, dto.email, hasher.hash(dto.password))
-        created_user = await uow.user_repo.persist(user)
-        return UserResponse(created_user.id, created_user.name, created_user.email)
+        await uow.user_repo.persist(user)
+        return UserResponse(user.id, user.name, user.email)
 
 
 async def get_by_id(repo: UserRepo, _id: UUID) -> Optional[UserResponse]:
@@ -31,8 +31,9 @@ async def get_by_id(repo: UserRepo, _id: UUID) -> Optional[UserResponse]:
         return UserResponse(user.id, user.name, user.email)
 
 
-async def delete(repo: UserRepo, _id: UUID) -> bool:
-    return await repo.delete(_id)
+async def delete(uow: UserUnitOfWork, _id: UUID) -> bool:
+    async with uow:
+        return await uow.user_repo.delete(_id)
 
 
 async def update(uow: UserUnitOfWork, _id: UUID, dto: UpdateUser) -> Optional[UserResponse]:
@@ -51,7 +52,8 @@ async def update(uow: UserUnitOfWork, _id: UUID, dto: UpdateUser) -> Optional[Us
             )
         )
 
-        return UserResponse(updated_user.id, updated_user.name, updated_user.email)
+        if updated_user:
+            return UserResponse(updated_user.id, updated_user.name, updated_user.email)
 
 
 async def authenticate(
