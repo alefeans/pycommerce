@@ -1,12 +1,12 @@
 from uuid import UUID
-from pydantic import EmailStr
+
 from sqlmodel import Field, SQLModel
 
-Password = Field(..., min_length=8, max_length=100)
+from pycommerce.core.entities.user import Email, Password
 
 
 class User(SQLModel, table=True):
     id: UUID = Field(primary_key=True)
     name: str
-    email: EmailStr
-    password: str = Password
+    email: Email
+    password: Password
