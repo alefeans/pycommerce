@@ -86,7 +86,7 @@ alembic upgrade head && poetry run app
 # or
 alembic upgrade head && python -m pycommerce
 
-# using Docker (optionally, you can add pg-admin to the list of containers)
+# with Docker (optionally, you can add pg-admin to the list of containers)
 docker-compose up app pg-db -d
 ```
 
@@ -105,6 +105,9 @@ pytest tests/unit/
 
 # to run only the integration tests
 pytest tests/integration/
+
+# with Docker
+docker-compose up tests
 ```
 
 ## Development Workflow
