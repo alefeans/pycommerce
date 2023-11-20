@@ -13,7 +13,7 @@ class UserRepo:
         self.session = session
 
     async def persist(self, user: User) -> None:
-        self.session.add(DBUser.parse_obj(user))
+        self.session.add(DBUser.from_orm(user))
 
     async def get_by_id(self, _id: UUID) -> Optional[User]:
         user = await self.session.get(DBUser, _id)
