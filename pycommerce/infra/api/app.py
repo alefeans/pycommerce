@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
+
 from pycommerce.config import Settings
-from pycommerce.infra.api.routers import v1
-from pycommerce.infra.api.routers import root
+from pycommerce.infra.api.extensions import validation_exception_handler
+from pycommerce.infra.api.routers import root, v1
 
 
 def create_instance(settings: Settings) -> FastAPI:
@@ -19,6 +21,11 @@ def register_routers(app: FastAPI) -> FastAPI:
     return app
 
 
+def register_extensions(app: FastAPI) -> FastAPI:
+    app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    return app
+
+
 def create_app(settings: Settings) -> FastAPI:
     app = create_instance(settings)
-    return register_routers(app)
+    return register_routers(register_extensions(app))

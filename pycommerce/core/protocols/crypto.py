@@ -1,7 +1,7 @@
 from typing import Protocol
 
 
-class HashingProvider(Protocol):
+class Hasher(Protocol):
     def hash(self, value: str) -> str:
         ...
 

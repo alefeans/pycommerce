@@ -13,7 +13,10 @@ RUN apk --no-cache add \
     build-base \
     libffi-dev \
     musl \
-    openssl-dev
+    openssl-dev \
+    gcc \
+    libc-dev \
+    linux-headers
 
 RUN pip install poetry
 
@@ -26,6 +29,11 @@ FROM base as final
 WORKDIR /app
 
 COPY --from=requirements /tmp/requirements.txt /code/requirements.txt
+
+RUN apk --no-cache add \
+    libffi-dev \
+    gcc \
+    libc-dev
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
