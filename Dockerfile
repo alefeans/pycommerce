@@ -1,4 +1,4 @@
-FROM python:3.11.2-alpine3.17 as base
+FROM python:3.12.0-alpine3.18 as base
 
 FROM base as requirements
 

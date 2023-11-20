@@ -6,7 +6,7 @@ authors = ["alefeans <alefeans2@hotmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 fastapi = "^0.104.1"
 uvicorn = { extras = ["standard"], version = "^0.24.0" }
 alembic = "^1.10.2"
