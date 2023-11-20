@@ -9,6 +9,10 @@ from pycommerce.infra.db.unit_of_work.user import user_uow_factory
 from pycommerce.infra.providers.user import UserHasher
 
 
+def get_user_hasher() -> user.UserHasher:
+    return UserHasher()
+
+
 async def get_user_repo() -> AsyncGenerator[user.UserRepo, None]:
     async with async_session() as session:
         yield UserRepo(session)
@@ -19,6 +23,6 @@ async def get_user_uow() -> AsyncGenerator[user.UserUnitOfWork, None]:
         yield user_uow_factory(session)
 
 
-Hasher = Annotated[user.UserHasher, Depends(UserHasher)]
+Hasher = Annotated[user.UserHasher, Depends(get_user_hasher)]
 Repo = Annotated[user.UserRepo, Depends(get_user_repo)]
 UnitOfWork = Annotated[user.UserUnitOfWork, Depends(get_user_uow)]
