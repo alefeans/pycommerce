@@ -1,5 +1,6 @@
-import pytest
 from uuid import uuid4
+
+import pytest
 
 
 @pytest.fixture
@@ -120,7 +121,7 @@ async def test_patch_partial_user_data_successfully(
     del update_user_payload["email"]
     update_user_payload["name"] = "only name"
     patch_response = await client.patch(f"{user_route}/{_id}", json=update_user_payload)
-    
+
     assert patch_response.status_code == 200
     assert patch_response.json()["name"] == update_user_payload["name"]
     assert patch_response.json()["email"] == create_user_payload["email"]
