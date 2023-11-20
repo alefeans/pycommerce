@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException
 
 from pycommerce.core.dtos.user import CreateUser, UpdateUser, UserResponse
+from pycommerce.core.entities.user import InvalidUser
 from pycommerce.core.services import user
 from pycommerce.infra.api.dependencies.user import Hasher, Repo, UnitOfWork
 
@@ -21,6 +22,8 @@ router = APIRouter()
 async def create(dto: CreateUser, uow: UnitOfWork, hasher: Hasher) -> UserResponse:
     try:
         return await user.create(uow, hasher, dto)
+    except InvalidUser as e:
+        raise HTTPException(422, detail=f"Invalid user: {e}")
     except user.UserAlreadyExists:
         raise HTTPException(409, detail="User already exists")
 
