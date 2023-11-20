@@ -26,7 +26,7 @@ Although it's not a fully-featured real-world ecommerce application, it serves a
 - Linter: [Ruff](https://github.com/astral-sh/ruff)
 - Type checker: [Mypy](https://mypy.readthedocs.io/en/stable/index.html)
 - Code formatter: [Black](https://github.com/psf/black)
-- Local [development and tests with hot reload](#development-workflow), full [Asyncio](https://docs.python.org/3/library/asyncio.html) support, etc...
+- Local [development hot reload](#hot-reload), [watch](#watch-mode-for-tests) mode for tests, full [Asyncio](https://docs.python.org/3/library/asyncio.html) support, etc...
 
 Don't forget to check the [FAQ](docs/FAQ.md) for more information about the project's structure and design decisions.
 
@@ -109,9 +109,13 @@ pytest tests/integration/
 
 ## Development Workflow
 
+### Hot Reload
+
 By [default](/pycommerce/config.py#16), hot reload is configured independently of whether you're using Docker or not, so you can have faster development feedback like this:
 
 ![](docs/dev-hot-reload.gif)
+
+### Watch Mode for Tests
 
 Tests can also be triggered automatically whenever a test file is modified due to the use of [pytest-watch](https://pypi.org/project/pytest-watch/), which leads to a nice and efficient TDD workflow:
 
