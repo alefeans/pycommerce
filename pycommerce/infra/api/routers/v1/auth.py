@@ -1,14 +1,15 @@
 from fastapi import APIRouter, HTTPException
+
+from pycommerce.core.dtos.user import UserResponse
+from pycommerce.core.entities.user import Email, Password
+from pycommerce.core.usecases.user import authenticate
 from pycommerce.infra.api.dependencies.auth import (
     CurrentUser,
     Oauth2Form,
     Token,
     create_access_token,
 )
-from pycommerce.core.entities.user import UserResponse
-from pycommerce.core.services.user import authenticate
-from pycommerce.infra.api.dependencies.repositories import UserRepo
-from pycommerce.infra.api.dependencies.crypto import Hasher
+from pycommerce.infra.api.dependencies.user import Hasher, Repo
 
 router = APIRouter()
 
@@ -22,8 +23,10 @@ router = APIRouter()
     },
     operation_id="Credentials",
 )
-async def token(repo: UserRepo, hasher: Hasher, form_data: Oauth2Form) -> Token:
-    user = await authenticate(repo, hasher, form_data.username, form_data.password)
+async def token(repo: Repo, hasher: Hasher, form_data: Oauth2Form) -> Token:
+    user = await authenticate(
+        repo, hasher, Email(form_data.username), Password(form_data.password)
+    )
     if not user:
         raise HTTPException(
             status_code=401,
@@ -41,5 +44,5 @@ async def token(repo: UserRepo, hasher: Hasher, form_data: Oauth2Form) -> Token:
         401: {"description": "User unauthorized"},
     },
 )
-async def read_users_me(current_user: CurrentUser) -> UserResponse:
+async def get_current_user(current_user: CurrentUser) -> UserResponse:
     return current_user
