@@ -20,7 +20,6 @@
 - ORM: [SQLModel](https://sqlmodel.tiangolo.com/)
 - Password hashing: [Passlib](https://passlib.readthedocs.io/)
 - Authentication: [OAuth2 + JWT](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
-- Data parsing and validation: [Pydantic](https://pydantic-docs.helpmanual.io/)
 - Testing: [Pytest](https://docs.pytest.org/en/latest/)
 - Linter: [Ruff](https://github.com/astral-sh/ruff)
 - Type checker: [Mypy](https://mypy.readthedocs.io/en/stable/index.html)
