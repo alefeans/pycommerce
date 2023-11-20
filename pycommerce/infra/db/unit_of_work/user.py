@@ -10,7 +10,7 @@ class UserUnitOfWork(UnitOfWork):
         self.user_repo = repo
 
     async def __aexit__(self, *args):
-        super().__aexit__(*args)
+        await super().__aexit__(*args)
         await self.session.close()
 
     async def commit(self):
