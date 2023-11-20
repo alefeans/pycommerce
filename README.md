@@ -8,10 +8,12 @@
   </a>
 </p>
 
-`Pycommerce` is an example application built with modern Python following TDD, structured with a _variant_ of Clean Architecture, and using the technologies below:
+`Pycommerce` is an ecommerce example application intentionally designed to showcase how a _medium-sized_ project structured with [DDD](https://en.wikipedia.org/wiki/Domain-driven_design), [TDD](https://en.wikipedia.org/wiki/Test-driven_development), and [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) looks using the best of modern Python.
 
-- Language: [Python 3.11](https://www.python.org/)
-- Container: [Docker](https://www.docker.com/)
+Although it's not a fully-featured real-world ecommerce application, it serves as an inspiration project that can be easily extended. It features:
+
+- Language: [Python 3.12](https://www.python.org/)
+- Container: [Docker](https://www.docker.com/), and [Docker Compose](https://docs.docker.com/compose/)
 - Package management: [Poetry](https://python-poetry.org/)
 - Web framework: [FastAPI](https://fastapi.tiangolo.com/)
 - Web server: [Uvicorn](http://www.uvicorn.org/)
@@ -24,8 +26,25 @@
 - Linter: [Ruff](https://github.com/astral-sh/ruff)
 - Type checker: [Mypy](https://mypy.readthedocs.io/en/stable/index.html)
 - Code formatter: [Black](https://github.com/psf/black)
+- Local [development and tests with hot reload](#development-workflow), full [Asyncio](https://docs.python.org/3/library/asyncio.html) support, etc...
+
+Don't forget to check the [FAQ](docs/FAQ.md) for more information about the project's structure and design decisions.
 
 ## Usage
+
+While it's possible to run the application locally just using Python, it's highly recommended to install [Docker](https://www.docker.com/) to keep your local environment clean and facilitate the use of all the features.
+
+### Configuration
+
+`Pycommerce` uses environment variables for configuration. You can check all the available options [here](pycommerce/config.py). You can create and fill a `.env` file using the [.env.example](.env.example) file as a reference, or set them manually like this:
+
+```sh
+export DB_URL="<database_url>"
+export JWT_SECRET_KEY="<my_super_secret_key>"
+...
+```
+
+If using Docker, just edit the environment variables on [docker-compose.yml](./docker-compose.yml).
 
 ### Installing
 
@@ -38,53 +57,6 @@ poetry install
 
 pip install .
 ```
-
-### Configuration
-
-`Pycommerce` uses environment variables for configuration. You can check all the available options [here](pycommerce/config.py). You can set them manually like this:
-
-```sh
-export DB_URL="<database_url>"
-export JWT_SECRET_KEY="<my_super_secret_key>"
-...
-```
-
-Or, you can create and fill a `.env` file using the [.env.example](.env.example) file as a reference.
-
-### Tests
-
-Run the automated tests with:
-
-```sh
-docker-compose up tests
-
-# or, set the DB_URL env var to point to the testing database and run
-
-pytest
-```
-
-### Running the Application
-
-```sh
-# Optionally, you can add pg-admin to the containers list
-
-docker-compose up app pg-db -d
-
-# or, set the DB_URL env var to point to the dev database, and run
-
-alembic upgrade head && poetry run app
-
-# or
-
-alembic upgrade head && python -m pycommerce
-```
-
-Open the browser on [http://localhost:8080/docs](http://localhost:8080/docs) to see the OpenAPI docs:
-
-![](docs/openapi.png)
-
-⚠️ If you're not using Docker, remember to run the [init.sql](scripts/pg/init.sql) script to create the databases before running the application.
-
 ### Type Checking
 
 ```sh
@@ -103,19 +75,62 @@ ruff check .
 black --check pycommerce tests
 ```
 
+### Starting the Application
+
+⚠️ If not using Docker, remember to run the [init.sql](scripts/pg/init.sql) script to create the databases before running the application in your local database!
+
+```sh
+# set the DB_URL env var to point to the dev database, and run
+alembic upgrade head && poetry run app
+
+# or
+alembic upgrade head && python -m pycommerce
+
+# using Docker (optionally, you can add pg-admin to the list of containers)
+docker-compose up app pg-db -d
+```
+
+Then, open the browser on [http://localhost:8080/docs](http://localhost:8080/docs) to see the OpenAPI docs:
+
+![](docs/openapi.png)
+
+### Tests
+
+```sh
+# to run all the tests
+pytest
+
+# to run only the unit tests
+pytest tests/unit/
+
+# to run only the integration tests
+pytest tests/integration/
+```
+
 ## Development Workflow
 
-In order to enhance your development workflow and streamline the process of creating new features using TDD in Python, you can leverage [pytest-watch](https://pypi.org/project/pytest-watch/) (which is already included in the dependencies), to automatically trigger tests whenever a piece of code is modified. This helps to accelerate the feedback loop, allowing you to iterate more quickly and efficiently. For instance:
+By [default](/pycommerce/config.py#16), hot reload is configured independently of whether you're using Docker or not, so you can have faster development feedback like this:
 
-![](docs/tdd_workflow.gif)
+![](docs/dev-hot-reload.gif)
 
-## Project Structure
+Tests can also be triggered automatically whenever a test file is modified due to the use of [pytest-watch](https://pypi.org/project/pytest-watch/), which leads to a nice and efficient TDD workflow:
 
-🚧 TBD
+![](docs/test-hot-reload.gif)
 
-## Code Design
+For other options, you can use:
 
-🚧 TBD
+```sh
+# to watch all project tests
+docker-compose up watch
+
+# to watch only the ingration tests
+docker-compose up watch-integration
+
+# without Docker
+ptw -w -c tests/
+ptw -w -c tests/unit/
+ptw -w -c tests/integration/
+```
 
 ## License
 
