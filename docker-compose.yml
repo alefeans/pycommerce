@@ -14,14 +14,15 @@ services:
     base: &base
         hostname: app
         image: pycommerce
-        build:
-          context: .
-          dockerfile: Dockerfile
+        build: .
+        working_dir: /code
+        volumes:
+          - ./:/code
         environment: &env
             ENV: "dev"
             LOG_LEVEL: "debug"
             DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_dev"
-            SERVER_RELOAD: "false"
+            PYTHONDONTWRITEBYTECODE: 1
         depends_on:
           pg-db:
             condition: service_healthy
@@ -37,6 +38,45 @@ services:
     tests:
         <<: *base
         command: /bin/sh -c "pip install pytest pytest-asyncio && pytest tests/"
+        environment:
+          <<: *env
+          ENV: "test"
+          DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_test"
+        networks:
+          - pg-network
+
+    watch:
+        <<: *base
+        command: /bin/sh -c "pip install pytest pytest-asyncio pytest-watch && ptw -w -c tests/"
+        working_dir: /code
+        volumes:
+          - ./:/code
+        environment:
+          <<: *env
+          ENV: "test"
+          DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_test"
+        networks:
+          - pg-network
+
+    watch-unit:
+        <<: *base
+        command: /bin/sh -c "pip install pytest pytest-asyncio pytest-watch && ptw -w -c tests/unit/"
+        working_dir: /code
+        volumes:
+          - ./:/code
+        environment:
+          <<: *env
+          ENV: "test"
+          DB_URL: "postgresql+asyncpg://postgres:passwd@pg-db:5432/pycommerce_test"
+        networks:
+          - pg-network
+
+    watch-integration:
+        <<: *base
+        command: /bin/sh -c "pip install pytest pytest-asyncio pytest-watch && ptw -w -c tests/integration/"
+        working_dir: /code
+        volumes:
+          - ./:/code
         environment:
           <<: *env
           ENV: "test"
