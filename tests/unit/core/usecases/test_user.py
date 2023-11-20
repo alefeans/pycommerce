@@ -6,7 +6,7 @@ import pytest
 from pycommerce.core.dtos.user import CreateUser, UpdateUser
 from pycommerce.core.entities.user import Email, InvalidUser, Password, User
 from pycommerce.core.protocols.user import UserHasher, UserRepo, UserUnitOfWork
-from pycommerce.core.services import user
+from pycommerce.core.usecases import user
 
 
 class SpyUserHasher:
