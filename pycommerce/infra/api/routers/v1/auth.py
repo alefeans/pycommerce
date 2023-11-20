@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.post(
     "/token",
-    summary="Create access Token",
+    summary="Creates access Token",
     responses={
         200: {"description": "User authenticated"},
         401: {"description": "User unauthorized"},
@@ -38,7 +38,7 @@ async def token(repo: Repo, hasher: Hasher, form_data: Oauth2Form) -> Token:
 
 @router.get(
     "/me",
-    summary="Get authenticated User information",
+    summary="Gets authenticated User information",
     responses={
         200: {"description": "User info"},
         401: {"description": "User unauthorized"},

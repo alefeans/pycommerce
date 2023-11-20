@@ -13,7 +13,7 @@ router = APIRouter()
 @router.post(
     "",
     status_code=201,
-    summary="Create new User",
+    summary="Creates new User",
     responses={
         201: {"description": "User created successfully"},
         409: {"description": "User already exists"},
@@ -30,7 +30,7 @@ async def create(dto: CreateUser, uow: UnitOfWork, hasher: Hasher) -> UserRespon
 
 @router.get(
     "/{user_id}",
-    summary="Get User information",
+    summary="Gets User information",
     responses={
         200: {"description": "User found"},
         404: {"description": "User not found"},
@@ -46,7 +46,7 @@ async def get(user_id: UUID, repo: Repo) -> UserResponse:
 @router.delete(
     "/{user_id}",
     status_code=204,
-    summary="Delete User",
+    summary="Deletes User",
     responses={
         204: {"description": "User deleted successfully"},
         404: {"description": "User not found"},
@@ -59,7 +59,7 @@ async def delete(user_id: UUID, uow: UnitOfWork) -> None:
 
 @router.patch(
     "/{user_id}",
-    summary="Update User information",
+    summary="Updates User information",
     responses={
         200: {"description": "User updated"},
         404: {"description": "User not found"},
