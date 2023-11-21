@@ -15,8 +15,8 @@ from pycommerce.infra.api.extensions import adapt_type_error
             "missing 2 required fields: 'name' and 'age'",
         ),
         (
-            "DTO.__init__() missing 3 required positional arguments: 'name', 'other' and 'age'",
-            "missing 3 required fields: 'name', 'other' and 'age'",
+            "DTO.__init__() missing 3 required positional arguments: 'name', 'id' and 'age'",
+            "missing 3 required fields: 'name', 'id' and 'age'",
         ),
     ],
 )
