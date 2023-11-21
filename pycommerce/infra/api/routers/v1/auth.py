@@ -4,11 +4,7 @@ from pycommerce.core.dtos.auth import TokenResponse
 from pycommerce.core.dtos.user import UserResponse
 from pycommerce.core.entities.user import Email, Password
 from pycommerce.core.usecases.user import authenticate
-from pycommerce.infra.api.dependencies.auth import (
-    CurrentUser,
-    Oauth2Form,
-    TokenProvider,
-)
+from pycommerce.infra.api.dependencies.auth import CurrentUser, Oauth2Form, TokenProvider
 from pycommerce.infra.api.dependencies.user import Hasher, Repo
 
 router = APIRouter()

@@ -1,11 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
-from pycommerce.core.dtos.user import (
-    CreateUser,
-    UpdateUser,
-    UserResponse,
-)
+from pycommerce.core.dtos.user import CreateUser, UpdateUser, UserResponse
 from pycommerce.core.entities.user import Email, Password, User
 from pycommerce.core.protocols.user import UserHasher, UserRepo, UserUnitOfWork
 
