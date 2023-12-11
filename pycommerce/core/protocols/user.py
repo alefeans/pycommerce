@@ -1,8 +1,7 @@
 from typing import Optional, Protocol
 from uuid import UUID
 
-from pycommerce.core.entities.user import Email, Password, User
-from pycommerce.core.protocols.crypto import Hasher
+from pycommerce.core.entities.user import Email, User
 from pycommerce.core.protocols.unit_of_work import UnitOfWork
 
 
@@ -25,8 +24,3 @@ class UserRepo(Protocol):
 
 class UserUnitOfWork(UnitOfWork, Protocol):
     user_repo: UserRepo
-
-
-class UserHasher(Hasher, Protocol):
-    def hash(self, value: str) -> Password:
-        ...

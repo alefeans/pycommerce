@@ -5,7 +5,8 @@ from fastapi import APIRouter, HTTPException
 from pycommerce.core.dtos.user import CreateUser, UpdateUser, UserResponse
 from pycommerce.core.entities.user import InvalidUser
 from pycommerce.core.usecases import user
-from pycommerce.infra.api.dependencies.user import Hasher, Repo, UnitOfWork
+from pycommerce.infra.api.dependencies.crypto import Hasher
+from pycommerce.infra.api.dependencies.user import Repo, UnitOfWork
 
 router = APIRouter()
 

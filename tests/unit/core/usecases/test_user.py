@@ -5,7 +5,8 @@ import pytest
 
 from pycommerce.core.dtos.user import CreateUser, UpdateUser
 from pycommerce.core.entities.user import Email, InvalidUser, Password, User
-from pycommerce.core.protocols.user import UserHasher, UserRepo, UserUnitOfWork
+from pycommerce.core.protocols.crypto import Hasher
+from pycommerce.core.protocols.user import UserRepo, UserUnitOfWork
 from pycommerce.core.usecases import user
 
 
@@ -14,9 +15,9 @@ class SpyUserHasher:
         self.valid = True
         self.calls: List[Tuple[str, str]] = []
 
-    def hash(self, value: str) -> Password:
+    def hash(self, value: str) -> str:
         self.calls.append(("hash", value))
-        return Password("hashed_password")
+        return "hashed_password"
 
     def verify(self, value: str, hashed: str) -> bool:
         self.calls.append(("verify", f"{value}, {hashed}"))
@@ -90,7 +91,7 @@ def user_repo() -> UserRepo:
 
 
 @pytest.fixture
-def hasher() -> UserHasher:
+def hasher() -> Hasher:
     return SpyUserHasher()
 
 

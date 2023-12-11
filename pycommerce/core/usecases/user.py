@@ -3,20 +3,23 @@ from uuid import UUID
 
 from pycommerce.core.dtos.user import CreateUser, UpdateUser, UserResponse
 from pycommerce.core.entities.user import Email, Password, User
-from pycommerce.core.protocols.user import UserHasher, UserRepo, UserUnitOfWork
+from pycommerce.core.protocols.crypto import Hasher
+from pycommerce.core.protocols.user import UserRepo, UserUnitOfWork
 
 
 class UserAlreadyExists(Exception):
     pass
 
 
-async def create(uow: UserUnitOfWork, hasher: UserHasher, dto: CreateUser) -> UserResponse:
+async def create(uow: UserUnitOfWork, hasher: Hasher, dto: CreateUser) -> UserResponse:
+    User.validate_password(dto.password)
+
     async with uow:
         if await uow.user_repo.get_by_email(dto.email):
             raise UserAlreadyExists(f"User {dto.email} already exists")
 
-        User.validate_password(dto.password)
-        user = User(dto.name, dto.email, hasher.hash(dto.password))
+        hashed_password = Password(hasher.hash(dto.password))
+        user = User(dto.name, dto.email, hashed_password)
         await uow.user_repo.persist(user)
         return UserResponse(user.id, user.name, user.email)
 
@@ -53,7 +56,7 @@ async def update(uow: UserUnitOfWork, _id: UUID, dto: UpdateUser) -> Optional[Us
 
 
 async def authenticate(
-    repo: UserRepo, hasher: UserHasher, email: Email, password: Password
+    repo: UserRepo, hasher: Hasher, email: Email, password: Password
 ) -> Optional[UserResponse]:
     user = await repo.get_by_email(email)
     if user and hasher.verify(password, user.password):
