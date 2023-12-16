@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
-from datetime import datetime
 
 
 @dataclass(frozen=True)
@@ -25,4 +25,4 @@ class CategoryResponse:
     id: UUID
     name: str
     description: str
-    created_date: datetime
+    created_at: datetime

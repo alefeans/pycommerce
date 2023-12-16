@@ -37,7 +37,7 @@ class FakeCategoryRepo:
             category.name or old.name,
             category.description or old.description,
             old.id,
-            old.created_date,
+            old.created_at,
         )
         self.id_store[old.id] = updated
         self.name_store[old.name] = updated

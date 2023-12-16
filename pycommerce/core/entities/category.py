@@ -14,7 +14,7 @@ class Category(Entity):
     name: str
     description: str
     id: UUID = field(default_factory=uuid4)
-    created_date: datetime = field(default_factory=datetime.now)
+    created_at: datetime = field(default_factory=datetime.now)
 
     def validate(self):
         self.validate_name(self.name)

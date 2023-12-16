@@ -30,7 +30,7 @@ async def test_if_creates_category(category_uow, create_category_dto):
     assert category_uow.committed
     assert create_category_dto.name == persisted_category.name
     assert create_category_dto.description == persisted_category.description
-    assert persisted_category.created_date is not None
+    assert persisted_category.created_at is not None
 
 
 async def test_if_raises_when_creating_duplicated_category(category_uow, create_category_dto):
@@ -71,7 +71,7 @@ async def test_if_get_category_by_id(category_uow, create_category_dto):
     assert created_category.id == fetched_category.id
     assert created_category.name == fetched_category.name
     assert created_category.description == fetched_category.description
-    assert created_category.created_date == fetched_category.created_date
+    assert created_category.created_at == fetched_category.created_at
 
 
 async def test_if_returns_none_when_getting_nonexisting_category(category_repo):
@@ -103,7 +103,7 @@ async def test_if_updates_category_name(category_uow, create_category_dto):
     assert to_update.name == updated.name
     assert created_category.id == updated.id
     assert created_category.name != updated.name
-    assert created_category.created_date == updated.created_date
+    assert created_category.created_at == updated.created_at
     assert created_category.description == updated.description
 
 
@@ -119,7 +119,7 @@ async def test_if_updates_category_description(category_uow, create_category_dto
     assert created_category.id == updated.id
     assert created_category.name == updated.name
     assert created_category.description != updated.description
-    assert created_category.created_date == updated.created_date
+    assert created_category.created_at == updated.created_at
 
 
 async def test_if_fully_updates_category(category_uow, create_category_dto):
@@ -135,7 +135,7 @@ async def test_if_fully_updates_category(category_uow, create_category_dto):
     assert to_update.description == updated.description
     assert created_category.name != updated.name
     assert created_category.description != updated.description
-    assert created_category.created_date == updated.created_date
+    assert created_category.created_at == updated.created_at
 
 
 async def test_if_returns_none_when_updating_nonexisting_category(category_uow):

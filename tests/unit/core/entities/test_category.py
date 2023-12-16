@@ -12,8 +12,8 @@ def test_if_generates_unique_id_for_new_categories(valid_data):
     assert Category(**valid_data).id != Category(**valid_data).id
 
 
-def test_if_generates_created_date_for_new_categories(valid_data):
-    assert Category(**valid_data).created_date != Category(**valid_data).created_date
+def test_if_generates_created_at_for_new_categories(valid_data):
+    assert Category(**valid_data).created_at != Category(**valid_data).created_at
 
 
 def test_if_raises_when_category_name_is_empty():

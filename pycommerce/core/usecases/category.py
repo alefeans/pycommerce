@@ -18,13 +18,13 @@ async def create(uow: CategoryUnitOfWork, dto: CreateCategory) -> CategoryRespon
         category = Category(dto.name, dto.description)
         await uow.category_repo.persist(category)
         return CategoryResponse(
-            category.id, category.name, category.description, category.created_date
+            category.id, category.name, category.description, category.created_at
         )
 
 
 async def get_all(repo: CategoryRepo) -> List[CategoryResponse]:
     return [
-        CategoryResponse(ctg.id, ctg.name, ctg.description, ctg.created_date)
+        CategoryResponse(ctg.id, ctg.name, ctg.description, ctg.created_at)
         for ctg in await repo.get_all()
     ]
 
@@ -33,7 +33,7 @@ async def get_by_id(repo: CategoryRepo, _id: UUID) -> Optional[CategoryResponse]
     category = await repo.get_by_id(_id)
     if category:
         return CategoryResponse(
-            category.id, category.name, category.description, category.created_date
+            category.id, category.name, category.description, category.created_at
         )
 
 
@@ -56,7 +56,7 @@ async def update(
                 dto.name or existing_category.name,
                 dto.description or existing_category.description,
                 existing_category.id,
-                existing_category.created_date,
+                existing_category.created_at,
             )
         )
 
@@ -65,5 +65,5 @@ async def update(
                 updated_category.id,
                 updated_category.name,
                 updated_category.description,
-                updated_category.created_date,
+                updated_category.created_at,
             )
