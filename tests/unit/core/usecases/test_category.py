@@ -94,7 +94,7 @@ async def test_if_returns_true_when_deleting_existing_category(
 
 async def test_if_updates_category_name(category_uow, create_category_dto):
     created_category = await category.create(category_uow, create_category_dto)
-    to_update = UpdateCategory("changed")
+    to_update = UpdateCategory("Updated")
 
     updated = await category.update(category_uow, created_category.id, to_update)
 
@@ -109,7 +109,7 @@ async def test_if_updates_category_name(category_uow, create_category_dto):
 
 async def test_if_updates_category_description(category_uow, create_category_dto):
     created_category = await category.create(category_uow, create_category_dto)
-    to_update = UpdateCategory(description="changed")
+    to_update = UpdateCategory(description="Updated")
 
     updated = await category.update(category_uow, created_category.id, to_update)
 
@@ -124,7 +124,7 @@ async def test_if_updates_category_description(category_uow, create_category_dto
 
 async def test_if_fully_updates_category(category_uow, create_category_dto):
     created_category = await category.create(category_uow, create_category_dto)
-    to_update = UpdateCategory("changed", "changed description")
+    to_update = UpdateCategory("Updated", "Updated description")
 
     updated = await category.update(category_uow, created_category.id, to_update)
 
