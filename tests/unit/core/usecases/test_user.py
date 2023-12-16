@@ -3,7 +3,7 @@ from uuid import uuid4
 import pytest
 
 from pycommerce.core.dtos.user import CreateUser, UpdateUser
-from pycommerce.core.entities.user import Email, InvalidUser, Password, User
+from pycommerce.core.entities.user import Email, InvalidUser, Password
 from pycommerce.core.protocols.crypto import Hasher
 from pycommerce.core.protocols.user import UserRepo
 from pycommerce.core.usecases import user
@@ -13,11 +13,6 @@ from tests.unit.core.usecases.fakes.user import FakeUserRepo, FakeUserUnitOfWork
 @pytest.fixture
 def create_user_dto():
     return CreateUser("Test", Email("test@test.com"), Password("password"))
-
-
-@pytest.fixture
-def user_ok(create_user_dto):
-    return User(create_user_dto.name, create_user_dto.email, create_user_dto.password)
 
 
 @pytest.fixture
