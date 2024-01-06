@@ -77,7 +77,7 @@ black --check pycommerce tests
 
 ### Starting the Application
 
-⚠️ If not using Docker, remember to run the [init.sql](scripts/pg/init.sql) script to create the databases before running the application in your local database!
+⚠️ If not using Docker, remember to run the [init.sql](scripts/pg/init.sql) in your local database before running the application.
 
 ```sh
 # set the DB_URL env var to point to the dev database, and run
