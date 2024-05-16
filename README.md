@@ -4,7 +4,7 @@
 
 <p align="left">
   <a href="https://skillicons.dev">
-    <img src="https://skills.thijs.gg/icons?i=py,fastapi,postgres,docker&theme=dark" />
+    <img src="https://skillicons.dev/icons?i=py,fastapi,postgres,docker&theme=dark" />
   </a>
 </p>
 
